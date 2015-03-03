@@ -15,7 +15,12 @@ listOfPaths = ["/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machi
                "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/2/*.JPG",
                "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/3/*.JPG",
                "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/4/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/5/*.JPG"]
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/5/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/6/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/7/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/8/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/9/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/10/*.JPG"]
  
 
 def fillholes(gray):
@@ -23,9 +28,9 @@ def fillholes(gray):
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
     res = cv2.morphologyEx(gray,cv2.MORPH_OPEN,kernel)
 
-ArrayToBeExported= [0,0,0,0] # initializing, this row to be deleted later
+ArrayToBeExported= [0,0,0,0,0,0] # initializing, this row to be deleted later
 
-for i in range(1,6):
+for i in range(1,10):
     label = i
     mypath = listOfPaths[i-1]
     files = glob.glob(mypath)
@@ -75,7 +80,9 @@ for i in range(1,6):
             ## GETTING ANGLE
             (x,y),(MA,ma),angle = cv2.fitEllipse(cnt)
             #rect = cv2.minAreaRect(cnt) # don't need this anyore, using the fitEllipse for angle, but just leaving it in for reference
-            
+            #getting area of contour
+            area = cv2.contourArea(cnt)
+            perimeter = cv2.arcLength(cnt,True)
         
            #Initializing moments: NEVER ACTUALLY USE THIS, but leaving it in in case we want to in the future
             centr=(0,0)#Declaring Center
@@ -105,18 +112,22 @@ for i in range(1,6):
             
             
     
-    ##LOADING DATA INTO ARRAY TO BE EXPORTED        
-            feature_point = [1,angle,NumberOfDetectedFingers,label]
-            ArrayToBeExported= np.vstack([ArrayToBeExported,feature_point]) # adding each feature row to the array
+            #creating vector of features
+            #feature_point = [1,angle,NumberOfDetectedFingers,label]
+            # IF WE WANT ADDITIONAL FEATURES.. (area and perimeter)         
+            feature_point = [1,angle,NumberOfDetectedFingers,area, perimeter,label]
             
+            ##LOADING DATA INTO ARRAY TO BE EXPORTED   
+            ArrayToBeExported= np.vstack([ArrayToBeExported,feature_point]) # adding each feature row to the array
+    
             
             #Show image
-            drawing2 = cv2.resize(drawing,None,fx=0.3, fy=0.3, interpolation = cv2.INTER_AREA)
+            drawing2 = cv2.resize(drawing,None,fx=0.2, fy=0.2, interpolation = cv2.INTER_AREA)
             cv2.imshow('drawing', drawing2) #comment this out when we're actually doing the feature extraction, just for visual debugging purposes            
             cv2.waitKey(0)
             cv2.destroyAllWindows()
 
 ArrayToBeExported = ArrayToBeExported[1:] # deleting the initializing row
 ArrayToBeExported = np.asarray(ArrayToBeExported)
-np.savetxt("ArrayToBeExported.csv", ArrayToBeExported, delimiter=",") # saves as csv
+np.savetxt("ArrayToBeExported4F.csv", ArrayToBeExported, delimiter=",") # saves as csv
 # IN MATLAB, can use M = csvread(filename) , or just navigate to the csv file and open it.

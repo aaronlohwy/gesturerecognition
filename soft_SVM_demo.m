@@ -88,7 +88,7 @@ end
 
 %%% loads data %%%
 function [A,b] = load_data()
-    data = load('soft_SVM_data.mat');
+    data = load('trainingdata2class.mat');
     data = data.data;
     A = data(:,1:3);
     A = A';

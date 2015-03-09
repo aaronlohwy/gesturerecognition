@@ -1,12 +1,18 @@
-function soft_SVM_demo_hw()
+function soft_SVM_demo2()
 % perceptron_demo_wrapper - runs the perceptron model on a separable two 
 % class dataset consisting of two dimensional data features. 
 % The perceptron is run 3 times with 3 initial points to show the 
 % recovery of different separating boundaries.  All points and recovered
 % as well as boundaries are then visualized.
+tempx = 0;
+tempy = 0;
+tempz = 0;
 
+for i = 1:5
 %%% load data %%%
-[D,b] = load_data();
+[D,b] = load_data(i);
+
+i
 
 %%% run perceptron for 3 initial points %%%
 
@@ -28,14 +34,25 @@ lam = 10^-2;
 alpha = 1/(L + 2*lam);        % step length
 z = grad_descent_soft_SVM(D,b,x0,alpha,lam);
 
+%% prints x result
+tempx = x
+tempy = y
+tempz = z
+
 %%% plot everything, pts and lines %%%
 plot_all(D',b,x,y,z);
+hold on
+
+end 
+end
 
 
 %%% gradient descent function for perceptron %%%
 function x = grad_descent_soft_SVM(D,b,x0,alpha,lam)
     % Initializations 
     x = x0;
+    H = diag(b)*D';
+    l = ones(size(D,2),1);
     iter = 1;
     max_its = 3000;
     grad = 1;
@@ -43,8 +60,7 @@ function x = grad_descent_soft_SVM(D,b,x0,alpha,lam)
     while  norm(grad) > 10^-6 && iter < max_its
         
         % form gradient and take step
-        U = [0, zeros(1,2); zeros(2,1), eye(2)];
-        grad =  -2*D*diag(b.')*subplus(ones(150,1) - (diag(b.')*D.'*x)) + 2*lam*U*x;           % your code goes here!
+        grad = 2*lam*[0;x(2:end)] - 2*H'*max(l - H*x,0);
         x = x - alpha*grad;
 
         % update iteration count
@@ -86,12 +102,19 @@ function plot_all(A,b,x,y,z)
 end
 
 %%% loads data %%%
-function [A,b] = load_data()
-    data = load('soft_SVM_data.mat');
-    data = data.data;
-    A = data(:,1:3);
-    A = A';
-    b = data(:,4);
+function [A,b] = load_data(i)
+    data = load('data_andrew.mat');
+    data = data.data2;
+    if i == 1
+      A = data(:,1:3);
+      A = A';
+      b = data(:,4);
+    else 
+      A = data(:,(5 + (4 * (i-2))):(7 + (4 * (i-2))));
+      A = A';
+      b = data(:,(8 + (4 * (i-2))));
+    end
+ 
 end
 
-end
+

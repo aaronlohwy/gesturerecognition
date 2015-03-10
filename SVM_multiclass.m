@@ -8,7 +8,7 @@ function soft_SVM_MultiClass()
 weights = [];
 [D,b] = load_data();
 
-for i = 1:5
+for i = 1:3
 %%% load data %%%
 i
 newlabels = b; % basically recodes the point with the current label to 1, the rest to -1
@@ -26,7 +26,7 @@ end
 % Calculate fixed steplength - via Lipschitz constant (see Chap 9 for 
 % explanation) - for use in all three runs
 
-x0 = [-5;-5;-5];    % initial point, experiment
+x0 = [1;2;3];    % initial point, experiment
 L = 2*norm(diag(newlabels)*D')^2;
 
 %Run perceptron first time
@@ -57,9 +57,9 @@ function plot_classifiers(A,b,weights)
     x1 = weights(1,:)
     x2 = weights(2,:)
     x3 = weights(3,:)
-    x4 = weights(4,:)
-    x5 = weights(5,:)
-    plot_all(A,b,x1,x2,x3,x4,x5);
+    %x4 = weights(4,:)
+   % x5 = weights(5,:)
+    plot_all(A,b,x1,x2,x3)%,x4,x5);
 end
 
 %%% gradient descent function for perceptron %%%
@@ -84,7 +84,7 @@ function x = grad_descent_soft_SVM(D,b,x0,alpha,lam)
 end
 
 %%% plots everything %%%
-function plot_all(A,b,x1,x2,x3,x4,x5)
+function plot_all(A,b,x1,x2,x3)%,x4,x5)
     
     % plot points 
     ind = find(b == 1);
@@ -114,11 +114,11 @@ function plot_all(A,b,x1,x2,x3,x4,x5)
     plot (s,(-x3(1)-x3(2)*s)/x3(3),'g','linewidth',2);
     hold on
     
-    plot (s,(-x4(1)-x4(2)*s)/x4(3),'y','linewidth',2);
-    hold on
+    %plot (s,(-x4(1)-x4(2)*s)/x4(3),'y','linewidth',2);
+    %hold on
     
-    plot (s,(-x5(1)-x5(2)*s)/x5(3),'m','linewidth',2);
-    hold on
+    %plot (s,(-x5(1)-x5(2)*s)/x5(3),'m','linewidth',2);
+    %hold on
 
     set(gcf,'color','w');
     axis([ (min(A(:,2)) - 1) (max(A(:,2)) + 1) (min(A(:,3)) - 1) (max(A(:,3)) + 1)])
@@ -133,7 +133,7 @@ end
 
 %%% loads data %%%
 function [A,b] = load_data()
-    data = load('trainingdata5.mat');
+    data = load('data3classes2Features.mat');
     data = data.data;
     %if i == 1
     A = data(:,1:3);

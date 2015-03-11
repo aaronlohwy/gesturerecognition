@@ -26,10 +26,7 @@ end
 % Calculate fixed steplength - via Lipschitz constant (see Chap 9 for 
 % explanation) - for use in all three runs
 
-% initial point, experiment
-x0 = [3;3;3];   % FOR 2 FEATURES
-%x0 = [3;3;3;3;3];    % FOR 4 FEATURES
-
+x0 = [3;3;3];    % initial point, experiment
 L = 2*norm(diag(newlabels)*D')^2;
 
 %Run perceptron first time
@@ -47,19 +44,19 @@ lam = 10^-2;
 alpha = 1/(L + 2*lam);        % step length
 z = grad_descent_soft_SVM(D,newlabels,x0,alpha,lam);
 
-weights = [weights;y']; % change which set of weights you want to use, x,y or z
+weights = [weights;z']; % change which set of weights you want to use, x,y or z
 
 end 
 
-% plot everything % Can't plot for 4 Features!
+% plot everything
 plot_classifiers(D',b,weights);
 
 
 % label new points
 [newSet] = load_testingdata();
-[newlabelledSet] = createLabel(newSet,weights);
-doSomethingWithNewLabelledDataPoints(newlabelledSet);
-newlabelledSet
+[labelledSet] = createLabel(newSet,weights);
+
+labelledSet
 end
 
 
@@ -67,12 +64,12 @@ end
 
 %% FUNCTIONS FOR BUILDING MODEL
 function plot_classifiers(A,b,weights)
-    x1 = weights(1,:);
-    x2 = weights(2,:);
-    x3 = weights(3,:);
+    x1 = weights(1,:)
+    x2 = weights(2,:)
+    x3 = weights(3,:)
     %x4 = weights(4,:)
    % x5 = weights(5,:)
-    plot_all(A,b,x1,x2,x3);%,x4,x5);
+    plot_all(A,b,x1,x2,x3)%,x4,x5);
 end
 
 %%% gradient descent function for perceptron %%%
@@ -146,12 +143,12 @@ end
 
 %%% loads data %%%
 function [A,b] = load_data()
-    data = load('TrainingData2FAltPerim.mat');
+    data = load('data3classes2FeaturesAltPerim.mat');
     data = data.data;
     %if i == 1
-    A = data(:,1:end-1);
+    A = data(:,1:3);
     A = A';
-    b = data(:,end);
+    b = data(:,4);
     %else 
     %  A = data(:,(5 + (4 * (i-2))):(7 + (4 * (i-2))));
     %  A = A';
@@ -163,48 +160,46 @@ end
 
 
 
-%% FUNCTIONS FOR TESTING NEW DATA POINTS
+%% FUNCTIONS FOR TESTING NEW DATA POINTS, NOT TESTED YET.
 function [A] = load_testingdata()
     data = load('testingdata.mat'); % create testing data mat with no labels [[1 a11 a12];[1 a21 a22]...]
     data = data.testingdata;
-    A = data;
+    A = data
 end
 
 %%test a new data point
 function [labelledDataSet] = createLabel(A,weights) %% A is an array of data points [1 a1 a2]
-    labelledDataSet = [];
+    labelledDataSet = []
     for j = 1:size(A,1)
-        d = A(j,:); % extract jth row of matrix ie. the jth data point
+        d = A(j,:) % extract jth row of matrix ie. the jth data point
         max = -99999;
         label = 1;
         for i = 1:size(weights,1)
-            x = weights(i,:);
-            value = d*x';
+            x = weights(i,:)
+            value = d*x'
             if value>max
-                label = i;
-                max = value;
+                label = i
+                max = value
             end
         end
-        labelledRow = [d,label];
-        labelledDataSet = [labelledDataSet;labelledRow];
+        labelledRow = [d,label]
+        labelledDataSet = [labelledDataSet;labelledRow]
     end
 end
 
 %% do something with new data point
 function doSomethingWithNewLabelledDataPoints(A) %% A is a matrix of newly labelled data points
-    for j = 1:size(A,1)
-        a = A(j,:);
-        label = a(end);
-        if label == 1
-            disp('gesture 1')
-        elseif label == 2
-            disp('gesture 2')
-        elseif label == 3
-            disp('gesture 3')
-        elseif label == 4
-            disp('gesture 4')
-        elseif label == 5
-            disp('gesture 5')
-        end
+    for j = 1:size(A,
+    label = a(end)
+    if label == 1
+        disp('gesture 1')
+    elseif label == 2
+        disp('gesture 2')
+    elseif label == 3
+        disp('gesture 3')
+    elseif label == 4
+        disp('gesture 4')
+    elseif label == 5
+        disp('gesture 5')
     end
 end

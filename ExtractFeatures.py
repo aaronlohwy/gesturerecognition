@@ -14,13 +14,9 @@ import glob
 listOfPaths = ["/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/01/*.JPG",
                "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/02/*.JPG",
                "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/03/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/4/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/5/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/6/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/7/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/8/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/9/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/10/*.JPG"]
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/1/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/2/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/3/*.JPG"]
  
 
 def fillholes(gray):
@@ -111,11 +107,12 @@ for i in range(1,4): # change to accomodate different number of labels
                 NumberOfDetectedFingers= len(y_points)
             
             
-    
+            perimeter = perimeter/100 # for scaling purposes
+            area = area/1000
             #creating vector of features
-            feature_point = [1,angle,NumberOfDetectedFingers,label]
+            #feature_point = [1,perimeter,NumberOfDetectedFingers,label]
             # IF WE WANT ADDITIONAL FEATURES.. (area and perimeter)         
-            #feature_point = [1,angle,NumberOfDetectedFingers,area, perimeter,label]
+            feature_point = [1,angle,NumberOfDetectedFingers,area, perimeter,label]
             
             ##LOADING DATA INTO ARRAY TO BE EXPORTED   
             ListOfFeatures.append(feature_point)
@@ -131,5 +128,7 @@ for i in range(1,4): # change to accomodate different number of labels
 ArrayToBeExported = np.array(ListOfFeatures)
 #ArrayToBeExported = ArrayToBeExported[1:] # deleting the initializing row
 #ArrayToBeExported = np.asarray(ArrayToBeExported)
-np.savetxt("data3class2F.csv", ArrayToBeExported, delimiter=",") # saves as csv
+
+np.savetxt("data3class4Falt.csv", ArrayToBeExported, delimiter=",") # saves as csv
+#np.savetxt("testingdata.csv", ArrayToBeExported, delimiter=",") # saves as csv
 # IN MATLAB, can use M = csvread(filename) , or just navigate to the csv file and open it.

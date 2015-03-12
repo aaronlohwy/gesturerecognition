@@ -1,9 +1,6 @@
 function soft_SVM_MultiClass()
-% perceptron_demo_wrapper - runs the perceptron model on a separable two 
-% class dataset consisting of two dimensional data features. 
-% The perceptron is run 3 times with 3 initial points to show the 
-% recovery of different separating boundaries.  All points and recovered
-% as well as boundaries are then visualized.
+% runs the perceptron model on a separable four 
+% class dataset consisting of three dimensional data features. 
 
 weights = [];
 [D,b] = load_data();
@@ -22,14 +19,11 @@ for j = 1:numel(newlabels)
 end
 
 
-%%% run perceptron for 3 initial points %%%
+%%% run perceptron from initial point %%%
 
-% Calculate fixed steplength - via Lipschitz constant (see Chap 9 for 
-% explanation) - for use in all three runs
+% Calculate fixed steplength
 
 % initial point, experiment
-%x0 = [3;3;3];   % FOR 2 FEATURES
-%x0 = [.2;0;1;20];
 x0 = [0.5;0;0.9;130];
 
 L = 2*norm(diag(newlabels)*D')^2;
@@ -39,7 +33,7 @@ lam = 10^2;        % regularization parameter
 alpha = 1/(L + 2*lam);        % step length
 x = grad_descent_soft_SVM(D,newlabels,x0,alpha,lam);
 
-% Run perceptron second time
+% Run perceptron second time % found ideal weights by experimentation
 lam = 54;
 alpha = 1/(L + 2*lam);        % step length
 y = grad_descent_soft_SVM(D,newlabels,x0,alpha,lam);
@@ -71,8 +65,7 @@ function plot_classifiers(A,b,weights)
     x2 = weights(2,:);
     x3 = weights(3,:);
     x4 = weights(4,:)
-   % x5 = weights(5,:)
-    plot_all(A,b,x1,x2,x3,x4);%,x5);
+    plot_all(A,b,x1,x2,x3,x4);
 end
 
 %%% gradient descent function for perceptron %%%
@@ -97,24 +90,22 @@ function x = grad_descent_soft_SVM(D,b,x0,alpha,lam)
 end
 
 %%% plots everything %%%
-function plot_all(A,b,x1,x2,x3,x4)%,x5)
+function plot_all(A,b,x1,x2,x3,x4)
     
     % plot points 
     ind = find(b == 1);
-    scatter(A(ind,2),A(ind,3),'Linewidth',2,'Markeredgecolor','b','markerFacecolor','none');
+    scatter3(A(ind,2),A(ind,3), A(ind,4),'Linewidth',2,'Markeredgecolor','b','markerFacecolor','none');
     hold on
     ind = find(b == 2);
-    scatter(A(ind,2),A(ind,3),'Linewidth',2,'Markeredgecolor','r','markerFacecolor','none');
+    scatter3(A(ind,2),A(ind,3),A(ind,4),'Linewidth',2,'Markeredgecolor','r','markerFacecolor','none');
     hold on
     ind = find(b == 3);
-    scatter(A(ind,2),A(ind,3),'Linewidth',2,'Markeredgecolor','g','markerFacecolor','none');
+    scatter3(A(ind,2),A(ind,3),A(ind,4),'Linewidth',2,'Markeredgecolor','g','markerFacecolor','none');
     hold on
     ind = find(b == 4);
-    scatter(A(ind,2),A(ind,3),'Linewidth',2,'Markeredgecolor','y','markerFacecolor','none');
+    scatter3(A(ind,2),A(ind,3),A(ind,4),'Linewidth',2,'Markeredgecolor','y','markerFacecolor','none');
     hold on
-    ind = find(b == 5);
-    scatter(A(ind,2),A(ind,3),'Linewidth',2,'Markeredgecolor','m','markerFacecolor','none');
-    hold on
+
 
     % plot separators
     s =[min(A(:,2)):.01:max(A(:,2))];
@@ -130,8 +121,6 @@ function plot_all(A,b,x1,x2,x3,x4)%,x5)
     plot (s,(-x4(1)-x4(2)*s)/x4(3),'y','linewidth',2);
     hold on
     
-    %plot (s,(-x5(1)-x5(2)*s)/x5(3),'m','linewidth',2);
-    %hold on
 
     set(gcf,'color','w');
     axis([ (min(A(:,2)) - 1) (max(A(:,2)) + 1) (min(A(:,3)) - 1) (max(A(:,3)) + 1)])
@@ -146,33 +135,24 @@ end
 
 %%% loads data %%%
 function [A,b] = load_data()
-    %data = load('trainingdata3F2.mat');
     data = load('trainingdata4C.mat');
     data = data.data;
-    %if i == 1
+
     A = data(:,1:end-1);
     A = A';
     b = data(:,end);
-    %else 
-    %  A = data(:,(5 + (4 * (i-2))):(7 + (4 * (i-2))));
-    %  A = A';
-    %  b = data(:,(8 + (4 * (i-2))));
-    %end
- 
 end
 
-
-
-
 %% FUNCTIONS FOR TESTING NEW DATA POINTS
+
+%% load the testing data set (no labels)
 function [A] = load_testingdata()
-    %data = load('testingdata2.mat'); % create testing data mat with no labels [[1 a11 a12];[1 a21 a22]...]
-    data = load('testingdata4C.mat');
+    data = load('testingdata4C.mat');% create testing data mat with no labels [[1 a11 a12];[1 a21 a22]...]
     data = data.testingdata;
     A = data;
 end
 
-%%test a new data point
+%% test a new data point
 function [labelledDataSet] = createLabel(A,weights) %% A is an array of data points [1 a1 a2]
     labelledDataSet = [];
     for j = 1:size(A,1)

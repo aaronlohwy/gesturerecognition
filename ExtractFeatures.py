@@ -15,9 +15,11 @@ import glob
 listOfPaths = ["/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/4/*.JPG",
                "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/5/*.JPG",
                "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/6/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/9/*.JPG",
                "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/4/*.JPG",
                "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/5/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/6/*.JPG"]
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/6/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/9/*.JPG"]
  
 
 def fillholes(gray):
@@ -27,8 +29,8 @@ def fillholes(gray):
 
 ListOfFeatures= [] # initializing, this row to be deleted later
 
-#for i in range(4,7): # for testing, use range (4,7), also change the features and the output file line 121 and 139
-for i in range(1,4): # change to accomodate different number of labels 
+#for i in range(5,9): # for testing, use range (4,7), also change the features and the output file line 121 and 139
+for i in range(1,5): # change to accomodate different number of labels 
     label = i
     mypath = listOfPaths[i-1]
     files = glob.glob(mypath)
@@ -135,6 +137,6 @@ ArrayToBeExported = np.array(ListOfFeatures)
 #ArrayToBeExported = ArrayToBeExported[1:] # deleting the initializing row
 #ArrayToBeExported = np.asarray(ArrayToBeExported)
 
-np.savetxt("data3class3F2.csv", ArrayToBeExported, delimiter=",") # saves as csv
-#np.savetxt("testingdata3F2.csv", ArrayToBeExported, delimiter=",") # saves as csv
+np.savetxt("data4class3F2.csv", ArrayToBeExported, delimiter=",") # saves as csv
+#np.savetxt("testingdata4Class3F.csv", ArrayToBeExported, delimiter=",") # saves as csv
 # IN MATLAB, can use M = csvread(filename) , or just navigate to the csv file and open it.

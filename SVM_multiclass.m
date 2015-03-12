@@ -9,7 +9,7 @@ weights = [];
 [D,b] = load_data();
 
 
-for i = 1:3
+for i = 1:4
 %%% load data %%%
 i
 newlabels = b; % basically recodes the point with the current label to 1, the rest to -1
@@ -29,12 +29,8 @@ end
 
 % initial point, experiment
 %x0 = [3;3;3];   % FOR 2 FEATURES
-%x0 = [-10;5;0;0]
-
-%x0 = [2;2;2;2];
-%x0 = [-0.1;-0.5;2;2];
-
-x0 = [.2;0;1;20];
+%x0 = [.2;0;1;20];
+x0 = [0.5;0;0.9;130];
 
 L = 2*norm(diag(newlabels)*D')^2;
 
@@ -74,9 +70,9 @@ function plot_classifiers(A,b,weights)
     x1 = weights(1,:);
     x2 = weights(2,:);
     x3 = weights(3,:);
-    %x4 = weights(4,:)
+    x4 = weights(4,:)
    % x5 = weights(5,:)
-    plot_all(A,b,x1,x2,x3);%,x4,x5);
+    plot_all(A,b,x1,x2,x3,x4);%,x5);
 end
 
 %%% gradient descent function for perceptron %%%
@@ -101,7 +97,7 @@ function x = grad_descent_soft_SVM(D,b,x0,alpha,lam)
 end
 
 %%% plots everything %%%
-function plot_all(A,b,x1,x2,x3)%,x4,x5)
+function plot_all(A,b,x1,x2,x3,x4)%,x5)
     
     % plot points 
     ind = find(b == 1);
@@ -131,8 +127,8 @@ function plot_all(A,b,x1,x2,x3)%,x4,x5)
     plot (s,(-x3(1)-x3(2)*s)/x3(3),'g','linewidth',2);
     hold on
     
-    %plot (s,(-x4(1)-x4(2)*s)/x4(3),'y','linewidth',2);
-    %hold on
+    plot (s,(-x4(1)-x4(2)*s)/x4(3),'y','linewidth',2);
+    hold on
     
     %plot (s,(-x5(1)-x5(2)*s)/x5(3),'m','linewidth',2);
     %hold on
@@ -150,8 +146,8 @@ end
 
 %%% loads data %%%
 function [A,b] = load_data()
-    data = load('trainingdata3F2.mat');
-    %data = load('trainingdata4F.mat');
+    %data = load('trainingdata3F2.mat');
+    data = load('trainingdata4C.mat');
     data = data.data;
     %if i == 1
     A = data(:,1:end-1);
@@ -170,7 +166,8 @@ end
 
 %% FUNCTIONS FOR TESTING NEW DATA POINTS
 function [A] = load_testingdata()
-    data = load('testingdata2.mat'); % create testing data mat with no labels [[1 a11 a12];[1 a21 a22]...]
+    %data = load('testingdata2.mat'); % create testing data mat with no labels [[1 a11 a12];[1 a21 a22]...]
+    data = load('testingdata4C.mat');
     data = data.testingdata;
     A = data;
 end

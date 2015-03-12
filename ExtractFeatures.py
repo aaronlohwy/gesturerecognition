@@ -6,17 +6,18 @@ Created on Mon Feb 23 15:55:33 2015
 """
 
 # -*- coding: utf-8 -*-
+from __future__ import division
 import cv2
 import numpy as np
 import glob
 
 #change your root path
-listOfPaths = ["/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/01/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/02/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/03/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/1/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/2/*.JPG",
-               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/3/*.JPG"]
+listOfPaths = ["/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/4/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/5/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Sample Images/6/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/4/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/5/*.JPG",
+               "/Users/Aaron/Documents/TwentyFifteen/Winter 2015/EECS 395- Machine Learning/Course Project/Testing Images/6/*.JPG"]
  
 
 def fillholes(gray):
@@ -26,7 +27,8 @@ def fillholes(gray):
 
 ListOfFeatures= [] # initializing, this row to be deleted later
 
-for i in range(1,4): # change to accomodate different number of labels
+#for i in range(4,7): # for testing, use range (4,7), also change the features and the output file line 121 and 139
+for i in range(1,4): # change to accomodate different number of labels 
     label = i
     mypath = listOfPaths[i-1]
     files = glob.glob(mypath)
@@ -92,7 +94,7 @@ for i in range(1,4): # change to accomodate different number of labels
             
             #finding fingertips
     
-            NumberOfDetectedFingers=0;
+            NumberOfDetectedFingers=0.0;
             if(hull.shape[0] > 3 and cnt.shape[0] > 3): # Don't know if we need this test, seems unnecessary
                 defects = cv2.convexityDefects(cnt,hull) # getting the convexity defects
                 y_points = []
@@ -107,12 +109,16 @@ for i in range(1,4): # change to accomodate different number of labels
                 NumberOfDetectedFingers= len(y_points)
             
             
-            perimeter = perimeter/100 # for scaling purposes
-            area = area/1000
-            #creating vector of features
-            #feature_point = [1,perimeter,NumberOfDetectedFingers,label]
-            # IF WE WANT ADDITIONAL FEATURES.. (area and perimeter)         
-            feature_point = [1,angle,NumberOfDetectedFingers,area, perimeter,label]
+            # Grabbing Features and scaling them
+            #perimeter = perimeter/1000 # for scaling purposes
+            #area = area/10000
+            #NumberOfDetectedFingers = NumberOfDetectedFingers / 10
+            angle = angle/10
+            areaToPerimeterRatio = area/perimeter
+            
+            #creating vector of features     
+            feature_point = [1,angle,NumberOfDetectedFingers, areaToPerimeterRatio,label]
+            #feature_point = [1,angle,NumberOfDetectedFingers, areaToPerimeterRatio] #for testing
             
             ##LOADING DATA INTO ARRAY TO BE EXPORTED   
             ListOfFeatures.append(feature_point)
@@ -129,6 +135,6 @@ ArrayToBeExported = np.array(ListOfFeatures)
 #ArrayToBeExported = ArrayToBeExported[1:] # deleting the initializing row
 #ArrayToBeExported = np.asarray(ArrayToBeExported)
 
-np.savetxt("data3class4Falt.csv", ArrayToBeExported, delimiter=",") # saves as csv
-#np.savetxt("testingdata.csv", ArrayToBeExported, delimiter=",") # saves as csv
+np.savetxt("data3class3F2.csv", ArrayToBeExported, delimiter=",") # saves as csv
+#np.savetxt("testingdata3F2.csv", ArrayToBeExported, delimiter=",") # saves as csv
 # IN MATLAB, can use M = csvread(filename) , or just navigate to the csv file and open it.

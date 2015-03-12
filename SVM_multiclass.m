@@ -8,6 +8,7 @@ function soft_SVM_MultiClass()
 weights = [];
 [D,b] = load_data();
 
+
 for i = 1:3
 %%% load data %%%
 i
@@ -27,8 +28,13 @@ end
 % explanation) - for use in all three runs
 
 % initial point, experiment
-x0 = [3;3;3];   % FOR 2 FEATURES
-%x0 = [3;3;3;3;3];    % FOR 4 FEATURES
+%x0 = [3;3;3];   % FOR 2 FEATURES
+%x0 = [-10;5;0;0]
+
+%x0 = [2;2;2;2];
+%x0 = [-0.1;-0.5;2;2];
+
+x0 = [.2;0;1;20];
 
 L = 2*norm(diag(newlabels)*D')^2;
 
@@ -38,7 +44,7 @@ alpha = 1/(L + 2*lam);        % step length
 x = grad_descent_soft_SVM(D,newlabels,x0,alpha,lam);
 
 % Run perceptron second time
-lam = 10;
+lam = 54;
 alpha = 1/(L + 2*lam);        % step length
 y = grad_descent_soft_SVM(D,newlabels,x0,alpha,lam);
 
@@ -61,8 +67,6 @@ plot_classifiers(D',b,weights);
 doSomethingWithNewLabelledDataPoints(newlabelledSet);
 newlabelledSet
 end
-
-
 
 
 %% FUNCTIONS FOR BUILDING MODEL
@@ -146,7 +150,8 @@ end
 
 %%% loads data %%%
 function [A,b] = load_data()
-    data = load('TrainingData2FAltPerim.mat');
+    data = load('trainingdata3F2.mat');
+    %data = load('trainingdata4F.mat');
     data = data.data;
     %if i == 1
     A = data(:,1:end-1);
@@ -165,7 +170,7 @@ end
 
 %% FUNCTIONS FOR TESTING NEW DATA POINTS
 function [A] = load_testingdata()
-    data = load('testingdata.mat'); % create testing data mat with no labels [[1 a11 a12];[1 a21 a22]...]
+    data = load('testingdata2.mat'); % create testing data mat with no labels [[1 a11 a12];[1 a21 a22]...]
     data = data.testingdata;
     A = data;
 end
@@ -179,7 +184,7 @@ function [labelledDataSet] = createLabel(A,weights) %% A is an array of data poi
         label = 1;
         for i = 1:size(weights,1)
             x = weights(i,:);
-            value = d*x';
+            value = d*x'; %in the code it's d'*x but the rows are formatted differently so this is easier.
             if value>max
                 label = i;
                 max = value;
